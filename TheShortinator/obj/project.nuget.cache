@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "SbUx+GmEn7FODZct6rP6dOr5+4A/tCis3FpvC2FciQl4dF2Wscw9LYTR2R4BcimSTTbCsZQHJZww1EgiKVrF2g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\peter\\source\\repos\\TheShortinator\\TheShortinator\\TheShortinator.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\peter\\.nuget\\packages\\litedb\\5.0.17\\litedb.5.0.17.nupkg.sha512"
+  ],
+  "logs": []
+}
