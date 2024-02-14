@@ -1,8 +1,8 @@
-﻿using LiteDB;
-
-using System.Linq;
+﻿using System.Linq;
 using System;
 using TheShortinator.Models;
+using Azure;
+using TheShortinator.Data;
 
 namespace TheShortinator.AppLogic
 {
@@ -31,18 +31,23 @@ namespace TheShortinator.AppLogic
         /// <returns>ShortinatorURL</returns>
         public static ShortinatorURL CreateShortenedUrl(string url, string baseURL)
         {
-            using (var db = new LiteDB.LiteDatabase(@"Data/Urls.db"))
+            using (var context = new URLDBContext())
             {
-                string token = GenerateToken();
-                var urls = db.GetCollection<ShortinatorURL>();
-                while (urls.Exists(u => u.Token == token)) ;
-                ShortinatorURL shortenedUrl = new ShortinatorURL() { Token = token, URL = url, ShortenedURL = baseURL + token };
-                if (!urls.Exists(u => u.URL == url))
-                    urls.Insert(shortenedUrl);
+                using (var dbContextTransaction = context.Database.BeginTransaction())
+                {
+                    string token = GenerateToken();
+                    var urls = context.ShortinatorURLs.ToList();
+                    while (urls.Exists(u => u.Token == token)) ;
+                    ShortinatorURL shortenedUrl = new ShortinatorURL() { Token = token, URL = url, ShortenedURL = baseURL + token };
+                    if (!urls.Exists(u => u.URL == url))
+                        context.ShortinatorURLs.Add(shortenedUrl);
+                    context.SaveChanges();
 
-                return shortenedUrl;
+                    dbContextTransaction.Commit();
+
+                    return shortenedUrl;
+                }
             }
-
         }
     }
 }

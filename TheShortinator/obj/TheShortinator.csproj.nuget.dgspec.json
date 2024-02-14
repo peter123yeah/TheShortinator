@@ -40,9 +40,13 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "LiteDB": {
+            "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.17, )"
+              "version": "[8.0.2, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.2, )"
             }
           },
           "imports": [

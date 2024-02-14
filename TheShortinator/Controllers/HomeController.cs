@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Diagnostics;
 using TheShortinator.AppLogic;
+using TheShortinator.Data;
 using TheShortinator.Models;
 
 namespace TheShortinator.Controllers
@@ -51,7 +53,17 @@ namespace TheShortinator.Controllers
         {
             try
             {
-                return Redirect(new LiteDB.LiteDatabase(@"Data/Urls.db").GetCollection<ShortinatorURL>().FindOne(u => u.Token == token).URL);
+                using (var context = new URLDBContext())
+                {
+                    var urls = context.ShortinatorURLs.FirstOrDefault(s => s.Token == token);
+                    if(urls != null)
+                    {
+                        return Redirect(urls.URL);
+                    }
+                    
+                }
+
+                return Json(new URLResponse() { URL = string.Empty, Status = "already shortened", Token = token });
             }
             catch (Exception ex)
             {
@@ -74,9 +86,10 @@ namespace TheShortinator.Controllers
                 {
                     url = "http://" + url;
                 }
-                using (var db = new LiteDB.LiteDatabase(@"Data/Urls.db"))
+
+                using (var context = new URLDBContext())
                 {
-                    if (db.GetCollection<ShortinatorURL>().Exists(u => u.ShortenedURL == url))
+                    if (context.ShortinatorURLs.Any(u => u.ShortenedURL == url))
                     {
                         Response.StatusCode = 405;
                         return Json(new URLResponse() { URL = url, Status = "already shortened", Token = null });

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+
 
 namespace TheShortinator.Models
 {
@@ -9,5 +12,11 @@ namespace TheShortinator.Models
         public required string ShortenedURL { get; set; }
         public required string Token { get; set; }
 
+        public ShortinatorURL()
+        {
+            ID = Guid.NewGuid();
+        }
     }
+
+
 }
