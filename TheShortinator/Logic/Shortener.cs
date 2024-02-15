@@ -3,6 +3,7 @@ using System;
 using TheShortinator.Models;
 using Azure;
 using TheShortinator.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheShortinator.AppLogic
 {
@@ -29,14 +30,14 @@ namespace TheShortinator.AppLogic
         /// <param name="url">URL to shorten</param>
         /// <param name="baseURL">Base url of application</param>
         /// <returns>ShortinatorURL</returns>
-        public static ShortinatorURL CreateShortenedUrl(string url, string baseURL)
+        public static async Task<ShortinatorURL> CreateShortenedUrl(string url, string baseURL)
         {
             using (var context = new URLDBContext())
             {
                 using (var dbContextTransaction = context.Database.BeginTransaction())
                 {
                     string token = GenerateToken();
-                    var urls = context.ShortinatorURLs.ToList();
+                    var urls = await context.ShortinatorURLs.ToListAsync();
                     while (urls.Exists(u => u.Token == token)) ;
                     ShortinatorURL shortenedUrl = new ShortinatorURL() { Token = token, URL = url, ShortenedURL = baseURL + token };
                     if (!urls.Exists(u => u.URL == url))

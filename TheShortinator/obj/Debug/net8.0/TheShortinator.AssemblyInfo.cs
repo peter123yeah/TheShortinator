@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TheShortinator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ecabcf1d17e96e433ac56daf31bfdeedddc56f42")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b25a35efec4458947d8487da8024213f762d4bc")]
 [assembly: System.Reflection.AssemblyProductAttribute("TheShortinator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TheShortinator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
 using TheShortinator.AppLogic;
@@ -49,13 +50,13 @@ namespace TheShortinator.Controllers
         /// <param name="token">token tp get full url</param>
         /// <returns></returns>
         [HttpGet, Route("/{token}")]
-        public IActionResult TokenRedirect([FromRoute] string token)
+        public async Task<IActionResult> TokenRedirect([FromRoute] string token)
         {
             try
             {
                 using (var context = new URLDBContext())
                 {
-                    var urls = context.ShortinatorURLs.FirstOrDefault(s => s.Token == token);
+                    var urls = await context.ShortinatorURLs.FirstOrDefaultAsync(s => s.Token == token);
                     if(urls != null)
                     {
                         return Redirect(urls.URL);
@@ -78,7 +79,7 @@ namespace TheShortinator.Controllers
         /// <returns>Shortened url</returns>
         /// <exception cref="Exception"></exception>
         [HttpPost, Route("/")]
-        public IActionResult PostURL([FromBody] string url)
+        public async Task<IActionResult> PostURL([FromBody] string url)
         {
             try
             {
@@ -89,14 +90,14 @@ namespace TheShortinator.Controllers
 
                 using (var context = new URLDBContext())
                 {
-                    if (context.ShortinatorURLs.Any(u => u.ShortenedURL == url))
+                    if (await context.ShortinatorURLs.AnyAsync(u => u.ShortenedURL == url))
                     {
                         Response.StatusCode = 405;
-                        return Json(new URLResponse() { URL = url, Status = "already shortened", Token = null });
+                        return Json(new URLResponse() { URL = url, Status = "Url not exist", Token = null });
                     }
                 }
 
-                ShortinatorURL shortinatorURL = Shortinator.CreateShortenedUrl(url, baseURL);
+                ShortinatorURL shortinatorURL = await Shortinator.CreateShortenedUrl(url, baseURL);
                 return Json(shortinatorURL.Token);
             }
             catch (Exception ex)
